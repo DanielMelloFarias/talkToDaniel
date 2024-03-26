@@ -95,7 +95,6 @@ if "history" not in st.session_state:
 
 # Configurando a chave da API para a genai e inicializando o modelo
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-pro")
 
 # Configurações iniciais da página
 st.set_page_config(page_title="Talk With Daniel Mello", page_icon="🔥")
@@ -107,6 +106,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # Inicializando o chat com o histórico armazenado
+model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=st.session_state.history)
 
 
