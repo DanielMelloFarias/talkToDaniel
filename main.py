@@ -89,6 +89,11 @@ def generate_video(prompt, avatar_url, gender):
     return video_url
 
 
+with st.sidebar:
+    if st.button("Clear Chat Window", use_container_width=True, type="primary"):
+        st.session_state.history = []
+        st.rerun()
+        
 
 if "history" not in st.session_state:
     st.session_state.history = []
