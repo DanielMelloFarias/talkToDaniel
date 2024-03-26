@@ -5,7 +5,6 @@ from streamlit_chat import message
 
 import google.generativeai as genai
 
-import random
 import time
 import requests
 
@@ -121,7 +120,6 @@ for message in chat.history:
                 full_response = ""
                 for chunk in chat.send_message(prompt, stream=True):
                     word_count = 0
-                    random_int = random.randint(5,10)
                     for word in chunk.text:
                         full_response+=word
                         word_count+=1
@@ -129,7 +127,6 @@ for message in chat.history:
                             time.sleep(0.05)
                             message_placeholder.markdown(full_response + "_")
                             word_count = 0
-                            random_int = random.randint(5,10)
                 message_placeholder.markdown(full_response)
             except genai.types.generation_types.BlockedPromptException as e:
                 st.exception(e)
