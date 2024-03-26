@@ -8,8 +8,11 @@ import google.generativeai as genai
 import time
 import requests
 
-api_key = os.environ.get('KeyMaster')
-api_video = os.environ.get('token_video')
+#api_key = os.environ.get('KeyMaster')
+#api_video = os.environ.get('token_video')
+
+api_key = st.secrets["KeyMaster"]
+api_video = st.secrets["token_video"]
 
 def generate_video(prompt, avatar_url, gender):
     url = "https://api.d-id.com/talks"
