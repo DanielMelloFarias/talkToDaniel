@@ -105,8 +105,9 @@ st.set_page_config(
 st.title("Talk With Daniel Mello")
 st.caption("A Chatbot To Talk with Daniel Mello ")
 
+app_key = api_key
 if "app_key" not in st.session_state:
-    app_key = st.text_input("Please enter your Gemini API Key", type='password')
+    app_key = api_key
     if app_key:
         st.session_state.app_key = api_key
 
