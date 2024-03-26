@@ -113,10 +113,7 @@ if "app_key" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-try:
-    genai.configure(api_key = st.session_state.app_key)
-except AttributeError as e:
-    st.warning("Por favor, Digite a chave da API!")
+genai.configure(api_key = api_key)
 
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
