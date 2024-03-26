@@ -98,12 +98,12 @@ model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
 
 st.set_page_config(
-    page_title="Chat with Gemini Pro",
+    page_title="Talk With Daniel Mello",
     page_icon="🔥"
 )
 
-st.title("Chat with Gemini Pro")
-st.caption("A Chatbot Powered by Google Gemini Pro")
+st.title("Talk With Daniel Mello")
+st.caption("A Chatbot To Talk with Daniel Mello ")
 
 if "app_key" not in st.session_state:
     app_key = st.text_input("Please enter your Gemini API Key", type='password')
@@ -116,7 +116,7 @@ if "history" not in st.session_state:
 try:
     genai.configure(api_key = st.session_state.app_key)
 except AttributeError as e:
-    st.warning("Please Put Your Gemini API Key First")
+    st.warning("Por favor, Digite a chave da API!")
 
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
