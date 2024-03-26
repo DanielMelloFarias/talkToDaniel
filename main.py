@@ -93,22 +93,30 @@ def generate_video(prompt, avatar_url, gender):
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Configurando a chave da API para a genai e inicializando o modelo
-genai.configure(api_key=api_key)
+genai.configure(api_key = api_key)
+model = genai.GenerativeModel("gemini-pro")
+chat = model.start_chat(history = st.session_state.history)
 
-# Configurações iniciais da página
-st.set_page_config(page_title="Talk With Daniel Mello", page_icon="🔥")
+st.set_page_config(
+    page_title="Talk With Daniel Mello",
+    page_icon="🔥"
+)
+
 st.title("Talk With Daniel Mello")
-st.caption("A Chatbot To Talk with Daniel Mello")
+st.caption("A Chatbot To Talk with Daniel Mello ")
 
-# Inicializando o estado da sessão para o histórico, se ainda não existir
+if "app_key" not in st.session_state:
+    app_key = st.text_input("Please enter your Gemini API Key", type='password')
+    if app_key:
+        st.session_state.app_key = api_key
+
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Inicializando o chat com o histórico armazenado
-model = genai.GenerativeModel("gemini-pro")
-chat = model.start_chat(history=st.session_state.history)
+genai.configure(api_key = st.session_state.app_key)
 
+model = genai.GenerativeModel("gemini-pro")
+chat = model.start_chat(history = st.session_state.history)
 
 with st.sidebar:
     if st.button("Clear Chat Window", use_container_width=True, type="primary"):
