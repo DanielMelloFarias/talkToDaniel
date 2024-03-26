@@ -113,7 +113,7 @@ if "app_key" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-genai.configure(api_key = st.session_state.app_key)
+genai.configure(api_key = api_key)
 
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
