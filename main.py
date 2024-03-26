@@ -96,42 +96,40 @@ if "history" not in st.session_state:
 
 genai.configure(api_key = api_key)
 model = genai.GenerativeModel("gemini-pro")
-chat = model.start_chat(history = st.session_state.history)
 
-with st.sidebar:
-    if st.button("Clear Chat Window", use_container_width=True, type="primary"):
-        st.session_state.history = []
-        st.rerun()
 
-for message in chat.history:
-    role ="assistant" if message.role == 'model' else message.role
-    with st.chat_message(role):
-        st.markdown(message.parts[0].text)
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-if "app_key" in st.session_state:
-    if prompt := st.chat_input(""):
-        prompt = prompt.replace('\n', ' \n')
-        with st.chat_message("user"):
-            st.markdown(prompt)
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            message_placeholder.markdown("Thinking...")
-            try:
-                full_response = ""
-                for chunk in chat.send_message(prompt, stream=True):
-                    word_count = 0
-                    random_int = random.randint(5,10)
-                    for word in chunk.text:
-                        full_response+=word
-                        word_count+=1
-                        if word_count == random_int:
-                            time.sleep(0.05)
-                            message_placeholder.markdown(full_response + "_")
-                            word_count = 0
-                            random_int = random.randint(5,10)
-                message_placeholder.markdown(full_response)
-            except genai.types.generation_types.BlockedPromptException as e:
-                st.exception(e)
-            except Exception as e:
-                st.exception(e)
-            st.session_state.history = chat.history
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Accept user input
+if prompt := st.chat_input("O que você deseja perguntar ? Digite aqui sua dúvida do exame."):   
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+        assistant_response = model.generate_content(prompt)
+
+        # Simulate stream of response with milliseconds delay
+        for chunk in assistant_response.split():
+            full_response += chunk + " "
+            time.sleep(0.05)
+            # Add a blinking cursor to simulate typing
+            message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
+
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": full_response})            
