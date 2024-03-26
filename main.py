@@ -170,8 +170,8 @@ if "app_key" in st.session_state:
             # Atualiza o histórico de chat no estado da sessão para incluir a interação mais recente.
             try:
                 perguntaVideo = model.generate_content(['Extraia APENAS o texto da pergunta, sem mais nada', full_response])
-                print ("Pergunta: ", perguntaVideo)
-                video_url = generate_video("Me fale do seus desafios...", "https://iili.io/JjFrGXR.jpg", "Male")  # Call your video generation function here
+                print ("Pergunta: ", perguntaVideo.text)
+                video_url = generate_video(perguntaVideo.text, "https://iili.io/JjFrGXR.jpg", "Male")  # Call your video generation function here
                 if video_url!= "error":
                     st.text("Vídeo Gerado!")
                     # Placeholder for displaying generated video
