@@ -4,8 +4,7 @@ import streamlit as st
 from streamlit_chat import message
 
 import google.generativeai as genai
-import os
-import random
+
 import time
 import requests
 
