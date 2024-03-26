@@ -168,5 +168,18 @@ if "app_key" in st.session_state:
             except Exception as e:
                 st.exception(e)
             # Atualiza o histórico de chat no estado da sessão para incluir a interação mais recente.
+            try:
+                video_url = generate_video("Me fale do seus desafios...", "https://iili.io/JjFrGXR.jpg", "Male")  # Call your video generation function here
+                if video_url!= "error":
+                    st.text("Vídeo Gerado!")
+                    # Placeholder for displaying generated video
+                    #st.subheader("Vídeo Gerado")
+                    st.video(video_url)  # Replace with the actual path
+                else:
+                    st.text("Sorry... Try again")
+            except Exception as e:
+                print(e)
+                st.text("Sorry... Try again")
+                st.session_state.messages.append(video_url)
             st.session_state.history = chat.history
             st.session_state.history = []
