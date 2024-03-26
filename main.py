@@ -90,25 +90,22 @@ def generate_video(prompt, avatar_url, gender):
     return video_url
 
 
-if "history" not in st.session_state:
-    st.session_state.history = []
-
 genai.configure(api_key = api_key)
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
 
 st.set_page_config(
-    page_title="Chat with Gemini Pro",
+    page_title="Chat with Daniel Mello",
     page_icon="🔥"
 )
 
-st.title("Chat with Gemini Pro")
-st.caption("A Chatbot Powered by Google Gemini Pro")
+st.title("Chat with Daniel Mello")
+st.caption("A Chatbot to Talk with Daniel Mello")
 
 if "app_key" not in st.session_state:
-    app_key = st.text_input("Please enter your Gemini API Key", type='password')
+    app_key = st.text_input("Digite sua chave", type='password')
     if app_key:
-        st.session_state.app_key = app_key
+        st.session_state.app_key = api_key
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -116,7 +113,7 @@ if "history" not in st.session_state:
 try:
     genai.configure(api_key = st.session_state.app_key)
 except AttributeError as e:
-    st.warning("Please Put Your Gemini API Key First")
+    st.warning("Por favor, sua chave!!")
 
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
