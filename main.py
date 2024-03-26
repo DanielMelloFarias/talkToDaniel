@@ -7,6 +7,7 @@ import google.generativeai as genai
 
 import time
 import requests
+import random
 
 #api_key = os.environ.get('KeyMaster')
 #api_video = os.environ.get('token_video')
@@ -96,19 +97,41 @@ genai.configure(api_key = api_key)
 model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history = st.session_state.history)
 
+st.set_page_config(
+    page_title="Chat with Gemini Pro",
+    page_icon="🔥"
+)
+
+st.title("Chat with Gemini Pro")
+st.caption("A Chatbot Powered by Google Gemini Pro")
+
+if "app_key" not in st.session_state:
+    app_key = st.text_input("Please enter your Gemini API Key", type='password')
+    if app_key:
+        st.session_state.app_key = app_key
+
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+try:
+    genai.configure(api_key = st.session_state.app_key)
+except AttributeError as e:
+    st.warning("Please Put Your Gemini API Key First")
+
+model = genai.GenerativeModel("gemini-pro")
+chat = model.start_chat(history = st.session_state.history)
+
 with st.sidebar:
     if st.button("Clear Chat Window", use_container_width=True, type="primary"):
         st.session_state.history = []
         st.rerun()
 
-
-# Display chat messages from history on app rerun
 for message in chat.history:
     role ="assistant" if message.role == 'model' else message.role
     with st.chat_message(role):
-        st.markdown(message.parts[0].text)     
+        st.markdown(message.parts[0].text)
 
-
+if "app_key" in st.session_state:
     if prompt := st.chat_input(""):
         prompt = prompt.replace('\n', ' \n')
         with st.chat_message("user"):
@@ -120,6 +143,7 @@ for message in chat.history:
                 full_response = ""
                 for chunk in chat.send_message(prompt, stream=True):
                     word_count = 0
+                    random_int = random.randint(5,10)
                     for word in chunk.text:
                         full_response+=word
                         word_count+=1
@@ -127,6 +151,7 @@ for message in chat.history:
                             time.sleep(0.05)
                             message_placeholder.markdown(full_response + "_")
                             word_count = 0
+                            random_int = random.randint(5,10)
                 message_placeholder.markdown(full_response)
             except genai.types.generation_types.BlockedPromptException as e:
                 st.exception(e)
