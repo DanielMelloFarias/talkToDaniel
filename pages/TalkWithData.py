@@ -328,7 +328,7 @@ if st.session_state.clicked[1]:
         st.subheader("Variável de Estudo:")
             
         user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.select_dtypes(include='number').columns)
-        #user_question_variable_X = st.selectbox("Qual variável / feature é importante??", user_csv.columns)
+        user_question_variable_X = st.selectbox("Qual variável / feature é importante??", user_csv.columns)
         if user_question_variable:
             variable_info(user_csv, user_question_variable, user_question_variable_X)
             st.subheader("Estudo Aprofundado:")
