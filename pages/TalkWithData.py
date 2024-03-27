@@ -304,7 +304,7 @@ print (GOOGLE_API_KEY)
 # initialise the key in session state
 if 'clicked' not in st.session_state:
     st.session_state.clicked = {1:False}
-st.button("Let's get started", on_click=clicked, args=[1])
+st.button("Click Aqui para Começar..", on_click=clicked, args=[1])
 if st.session_state.clicked[1]: 
     user_csv = handle_file_upload()
     if user_csv is not None:
@@ -312,13 +312,13 @@ if st.session_state.clicked[1]:
         llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
         pandas_agent = create_pandas_dataframe_agent(llm, user_csv, verbose=True, handle_parsing_errors=True)
 
-        st.header("Exploratory Data Analysis")
-        st.subheader("General information about dataset")
+        st.header("Explorando a Análise de dados")
+        st.subheader("Informações Gerais sobre o Dataset")
         data_overview(user_csv, pandas_agent)
     
         st.subheader("Variable of study")
             
-        user_question_variable = st.selectbox("What variable are you interested in?", user_csv.select_dtypes(include='number').columns)
+        user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.select_dtypes(include='number').columns)
 
         if user_question_variable:
             variable_info(user_csv, user_question_variable)
