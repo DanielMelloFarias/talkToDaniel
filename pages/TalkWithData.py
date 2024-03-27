@@ -60,7 +60,7 @@ def handle_file_upload():
             # Lendo o arquivo CSV
         try:
             uploaded_file.seek(0)
-            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1', delimiter=";")
+            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1', delimiter=",")
         except Exception as e:
             st.error(f"Erro ao ler o arquivo: {e}")
 
