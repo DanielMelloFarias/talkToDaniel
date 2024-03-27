@@ -52,13 +52,17 @@ def clicked(button):
 
 # Function to handle user file upload
 def handle_file_upload():
-    user_csv = st.file_uploader("Upload your file here", type=["csv", "xlsx"])
-    if user_csv is not None:
-        print ("TESTE")
-        df = pd.read_excel(user_csv)
-        print (df)
-        user_csv.seek(0)
-        df = pd.read_csv(user_csv)
+    # Carregamento do arquivo
+    uploaded_file = st.file_uploader("Carregue seu arquivo CSV aqui", type=["csv"])
+
+    # Verifica se um arquivo foi carregado
+    if uploaded_file is not None:
+        # Lendo o arquivo CSV
+        df = pd.read_csv(uploaded_file)
+
+        # Exibindo o dataframe
+        st.write("Visualizando os dados:")
+        st.dataframe(df)
         return df
     return None
 
