@@ -54,7 +54,7 @@ def clicked(button):
 def handle_file_upload():
     # Carregamento do arquivo
     uploaded_file = st.file_uploader("Carregue seu arquivo CSV aqui", type=["csv"])
-    
+
     # Verifica se um arquivo foi carregado
     if uploaded_file is not None:
             # Lendo o arquivo CSV
@@ -75,7 +75,7 @@ def handle_file_upload():
 # Function to handle suggestions 
 def suggestion_model(api_key, topic):
     llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)    
-    data_science_prompt = PromptTemplate.from_template("You are a genius data scientist. Write me a solution {topic}.")
+    data_science_prompt = PromptTemplate.from_template("You are a genius data scientist. Write me a solution {topic}. Escreva em pt-br")
     prompt_chain = LLMChain(llm=llm, prompt=data_science_prompt, verbose=True)
     resp = prompt_chain.run(topic)
     return resp
@@ -90,11 +90,11 @@ def wiki(prompt):
 def prompt_templates():
     data_problem_template = PromptTemplate(
     input_variables=['business_problem'],
-    template='Convert the following business problem into a data science problem: {business_problem}.'
+    template='Convert the following business problem into a data science problem: {business_problem}. Responda em pt-br'
     )
     template='''Give a list of machine learning algorithms and as well as step by step 
     python code for any one algorithm that you think is suitable to solve 
-    this problem: {data_problem}, while using this Wikipedia research: {wikipedia_research}.'''
+    this problem: {data_problem}, while using this Wikipedia research: {wikipedia_research}. Responda em pt-br'''
     
     model_selection_template = PromptTemplate(
         input_variables=['data_problem', 'wikipedia_research'],
@@ -162,37 +162,37 @@ def chains_output(prompt, wiki_research, _model):
 # Function to diplay a overview of data
 @st.cache_data(experimental_allow_widgets=True)
 def data_overview(df, _pandas_agent):
-    st.write("**Data Overview**")
-    st.write("The first rows of your dataset look like this:")
+    st.write("**Resumo dos dados**")
+    st.write("As primeiras linhas dos dados...")
     st.write(df.head())
     
-    columns_df = _pandas_agent.run("What are the meaning of the columns?")
+    columns_df = _pandas_agent.run("What are the meaning of the columns? Escreva em pt-br")
     if columns_df is not None:
         st.write(columns_df)
     else:
         st.warning("Unable to retrieve column information.")
     
-    st.write("**Missing Values**")
-    st.write("Number of missing values in each column:")
+    st.write("**Valores 'Missing'**")
+    st.write("Número de dados 'missing' em cada coluna:")
     st.write(df.isnull().sum())
     
-    st.write("**Duplicate Values**")
-    duplicates = _pandas_agent.run("Are there any duplicate values and if so where?")
+    st.write("**Valores Replicados (duplicados)**")
+    duplicates = _pandas_agent.run("Are there any duplicate values and if so where?.Responda em pt-br")
     st.write(duplicates)
     
-    st.write("**Data Summarisation**")
+    st.write("**Sumário dos Dados **")
     st.write(df.describe())
     
     # Shape of the Dataset
-    st.write("**Shape of the Dataset**")
-    st.write(f"The dataset has {df.shape[0]} rows and {df.shape[1]} columns.")
+    st.write("**Shape odo DataSet**")
+    st.write(f"Os dados tem: {df.shape[0]} linhas (rows) and {df.shape[1]} colunas (columns).")
     
     # Skewness for Numeric Variables
-    st.write("**Skewness for Numeric Variables**")
+    st.write("**Assimetria das Variáveis **")
     numeric_columns = df.select_dtypes(include='number').columns
     for col in numeric_columns:
         skewness = df[col].skew()
-        st.write(f"Skewness for '{col}': {skewness}")
+        st.write(f"Assimetria : '{col}': {skewness}")
     
     # # Data Types
     # st.write("**Data Types**")
@@ -251,58 +251,58 @@ def perform_eda(input, _pandas_agent):
 @st.cache_data
 def variable_info(df, var):
     # Summary Statistics
-    st.write(f"Summary Statistics for '{var}':")
+    st.write(f"Resumo Estatístico: '{var}':")
     st.write(df[var].describe())
     
     # line plot
     st.line_chart(df, y=[var])
 
     # Distribution Visualization
-    st.write(f"Distribution of '{var}':")
+    st.write(f"Distribuição: '{var}':")
     fig, ax = plt.subplots()
     sns.histplot(df[var], kde=True, ax=ax, color='#4CAF50')
     st.pyplot(fig)
 
     # Box Plot
-    st.write(f"Box Plot for '{var}':")
+    st.write(f"BoxPlot: '{var}':")
     fig, ax = plt.subplots()
     sns.boxplot(x=df[var], ax=ax, color='#4CAF50')
     st.pyplot(fig)
 
     # Value Counts for Categorical Variables
     if df[var].dtype == 'O':  # Check if the variable is categorical
-        st.write(f"Value Counts for '{var}':")
+        st.write(f"Contagem de dados: '{var}':")
         st.write(df[var].value_counts())
     else:
-        st.write(f"Outlier detection and normality tests are not applicable for variable  '{var}' .")
+        st.write(f"A detecção de valores discrepantes e os testes de normalidade não são aplicáveis para variáveis  '{var}' .")
 
     # Outliers Detection
-    st.write(f"Outliers Detection for '{var}':")
+    st.write(f"Detecção de Outliers para a varíavel:  '{var}':")
     if df[var].dtype != 'O':  # Check if the variable is not categorical
         z_scores = stats.zscore(df[var])
         outliers = df[(z_scores > 3) | (z_scores < -3)][var]
         st.write(outliers)
     else:
-        st.write("Outlier detection is not applicable for categorical variables.")
+        st.write("A detecção de valores discrepantes não é aplicável a variáveis categóricas")
 
     # Normality Test
-    st.write(f"Normality Test for '{var}':")
+    st.write(f"Teste normal para variável: '{var}':")
     if df[var].dtype != 'O':  # Check if the variable is not categorical
         _, p_value = stats.normaltest(df[var].dropna())
         st.write(f"P-value: {p_value}")
         if p_value < 0.05:
-            st.write("The variable does not follow a normal distribution.")
+            st.write("A variável não segue uma distribuição normal.")
         else:
-            st.write("The variable follows a normal distribution.")
+            st.write("A variável segue uma distribuição normal.")
     else:
-        st.write("Normality test is not applicable for categorical variables.")
+        st.write("O teste de normalidade não é aplicável para variáveis categóricas.")
 
     # Missing Values
-    st.write(f"Missing Values for '{var}':")
+    st.write(f"Valores 'missing': '{var}':")
     st.write(df[var].isnull().sum())
 
     # Data Type
-    st.write(f"Data Type for '{var}':")
+    st.write(f"Tipo (type) dos dados: '{var}':")
     st.write(df[var].dtype)
     return 
 
@@ -325,35 +325,35 @@ if st.session_state.clicked[1]:
         st.subheader("Informações Gerais sobre o Dataset")
         data_overview(user_csv, pandas_agent)
     
-        st.subheader("Variable of study")
+        st.subheader("Variável de Estudo:")
             
-        user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.select_dtypes(include='number').columns)
-
+        #user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.select_dtypes(include='number').columns)
+        user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.columns)
         if user_question_variable:
             variable_info(user_csv, user_question_variable)
-            st.subheader("Further Study")
-            task_input = st.text_input("What task do you want to perform?")
+            st.subheader("Estudo Aprofundado:")
+            task_input = st.text_input("O que mais vc gostaria de analisar?")
             if task_input:
                 st.write(perform_pandas_task(task_input, pandas_agent))
 
                 st.divider()
-                st.header("Data Science Problem")
-                st.write("""Now that we have a solid grasp of the data at hand and a 
-                        clear understanding of the variable we intend to investigate, 
-                        it's important that we reframe our business 
-                        problem into a data science problem.""")
+                st.header("Problema de Ciências de Dados - Após Analisar os dados")
+                st.write("""Agora que temos uma compreensão sólida dos dados em mãos 
+                            e uma compreensão clara da variável que pretendemos investigar,
+                            é importante reformularmos nosso problema de negócios
+                            em um problema de ciência de dados.""")
                 
                 # Get user input
-                prompt = st.text_area('What is the business problem you would like to solve?')
+                prompt = st.text_area('Qual problema de negócio vc qr resolver?')
 
                 # Display results on button click
-                if st.button("Get Suggestions"):
+                if st.button("Sugestões?"):
                     if prompt:
                         wiki_research = wiki(prompt)
                         my_data_problem, my_model_selection = chains_output(prompt, wiki_research, llm)
-                        st.write("**Data Science Problem:**")
+                        st.write("**Problema de Ciência de Dados:**")
                         st.write(my_data_problem)
-                        st.write("**Machine Learning Algorithm Suggestions:**")
+                        st.write("**Sugestões de Algoritmos de ML:**")
                         st.write(my_model_selection)
                         # algorithm_list = list_to_selectbox(my_model_selection)
                         # st.write(algorithm_list)
@@ -366,13 +366,13 @@ if st.session_state.clicked[1]:
                             
 
         with st.sidebar:
-            with st.expander("What are the steps of EDA"):
-                topic = 'What are the steps of Exploratory Data Analysis'
+            with st.expander("Quais são as etapas da EDA"):
+                topic = 'Quais são as etapas da Análise Exploratória de Dados'
                 resp = suggestion_model(GOOGLE_API_KEY, topic)
                 st.write(resp)
 
             with st.expander("Get Help"):
-                llm_suggestion = st.text_area("Ask Me Data Science Problem:")
+                llm_suggestion = st.text_area("Me faça perguntas sobre ciência de dados:")
 
                 if st.button("Tell me"):
                     llm_result = suggestion_model(GOOGLE_API_KEY, llm_suggestion)
