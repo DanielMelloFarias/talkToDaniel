@@ -53,10 +53,10 @@ def clicked(button):
 # Function to handle user file upload
 def handle_file_upload():
     user_csv = st.file_uploader("Upload your file here", type="csv")
-    print (user_csv)
-    df = pd.read_csv(user_csv)
-    print (df)
     if user_csv is not None:
+        print (user_csv)
+        df = pd.read_csv(user_csv)
+        print (df)
         user_csv.seek(0)
         df = pd.read_csv(user_csv)
         return df
@@ -301,8 +301,6 @@ def variable_info(df, var):
  
 GOOGLE_API_KEY=load_api_key()
 display_welcome()
-
-print (GOOGLE_API_KEY)
 
 # initialise the key in session state
 if 'clicked' not in st.session_state:
