@@ -60,7 +60,7 @@ def handle_file_upload():
             # Lendo o arquivo CSV
         try:
             uploaded_file.seek(0)
-            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1', delimiter=",")
+            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1', delimiter=";")
         except Exception as e:
             st.error(f"Erro ao ler o arquivo: {e}")
 
@@ -255,8 +255,7 @@ def variable_info(df, var, varX):
     st.write(df[var].describe())
     
     # line plot
-    #st.line_chart(df, x="Produto", y=[var])
-    st.line_chart(df, y=[var])
+    st.line_chart(df, x="Produto", y=[var])
 
     # Distribution Visualization
     st.write(f"Distribuição: '{var}':")
