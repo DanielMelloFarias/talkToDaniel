@@ -32,25 +32,19 @@ def load_api_key():
     
 # Function to display welcome message and sidebar
 def display_welcome():
-    st.title("AI Assistant for Data Science 🤖")
-    st.write('Hello,👋 I am your Assistant and I am here  to help you with your data science projects. 💚')
+    st.title("Sou DanielData, O assistente para Análise de Dados🤖")
+    st.write('Olá!!👋 Sou seu assistente de dados e estou aqui para lhe ajudar com projetos de Ciência de Dados. 💚')
     
     # side bar 
     with st.sidebar:
-        st.write('*Your Data Science Adventure Begins with an CSV File.* ')
-        st.caption('''**You may already know that every exciting data science journey starts with
-                a CSV file. Once we have your data in hand, 
-                we'll dive into understanding it and have 
-                some fun in exploring it. Then , we'll work 
-                together to shape your business challenge
-                into a data science framework. I'll introduce
-                you to the coolest machine learning models,
-                and we'll use them to tackle your problem.
-                Sounds fun right**
+        st.write('*Estou aqui para ajudar na jornada dos dados. Para começar, preciso de um arquivo .CSV* ')
+        st.caption('''**Nossa jornada começa com um arquivo CSV...
+                Vamos mergulhar na compreensão dos dados e...
+                explorar todas as ideias e soluções.. **
                 ''')
         # divider
         st.divider()
-        st.caption('Made with love 💛', unsafe_allow_html=True)
+        st.caption('Daniel Mello 💛', unsafe_allow_html=True)
  
 # function to update the value in session state
 def clicked(button):
