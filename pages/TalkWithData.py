@@ -52,7 +52,7 @@ def clicked(button):
 
 # Function to handle user file upload
 def handle_file_upload():
-    user_csv = st.file_uploader("Upload your file here", type="csv")
+    user_csv = st.file_uploader("Upload your file here", type=["csv", "xlsx"])
     if user_csv is not None:
         print ("TESTE")
         df = pd.read_excel(user_csv)
