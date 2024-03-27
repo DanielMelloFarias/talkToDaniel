@@ -301,75 +301,76 @@ def variable_info(df, var):
     st.write(df[var].dtype)
     return 
 
-# main
-def main():
-    GOOGLE_API_KEY=load_api_key()
-    display_welcome()
-    
-    # initialise the key in session state
-    if 'clicked' not in st.session_state:
-        st.session_state.clicked = {1:False}
-    st.button("Let's get started", on_click=clicked, args=[1])
-    if st.session_state.clicked[1]: 
-        user_csv = handle_file_upload()
-        if user_csv is not None:
-            # Initialize pandas_agent
-            llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
-            pandas_agent = create_pandas_dataframe_agent(llm, user_csv, verbose=True, handle_parsing_errors=True)
+ 
+GOOGLE_API_KEY=load_api_key()
+display_welcome()
 
-            st.header("Exploratory Data Analysis")
-            st.subheader("General information about dataset")
-            data_overview(user_csv, pandas_agent)
-        
-            st.subheader("Variable of study")
+print (GOOGLE_API_KEY)
+
+# initialise the key in session state
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = {1:False}
+st.button("Let's get started", on_click=clicked, args=[1])
+if st.session_state.clicked[1]: 
+    user_csv = handle_file_upload()
+    if user_csv is not None:
+        # Initialize pandas_agent
+        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
+        pandas_agent = create_pandas_dataframe_agent(llm, user_csv, verbose=True, handle_parsing_errors=True)
+
+        st.header("Exploratory Data Analysis")
+        st.subheader("General information about dataset")
+        data_overview(user_csv, pandas_agent)
+    
+        st.subheader("Variable of study")
+            
+        user_question_variable = st.selectbox("What variable are you interested in?", user_csv.select_dtypes(include='number').columns)
+
+        if user_question_variable:
+            variable_info(user_csv, user_question_variable)
+            st.subheader("Further Study")
+            task_input = st.text_input("What task do you want to perform?")
+            if task_input:
+                st.write(perform_pandas_task(task_input, pandas_agent))
+
+                st.divider()
+                st.header("Data Science Problem")
+                st.write("""Now that we have a solid grasp of the data at hand and a 
+                        clear understanding of the variable we intend to investigate, 
+                        it's important that we reframe our business 
+                        problem into a data science problem.""")
                 
-            user_question_variable = st.selectbox("What variable are you interested in?", user_csv.select_dtypes(include='number').columns)
+                # Get user input
+                prompt = st.text_area('What is the business problem you would like to solve?')
 
-            if user_question_variable:
-                variable_info(user_csv, user_question_variable)
-                st.subheader("Further Study")
-                task_input = st.text_input("What task do you want to perform?")
-                if task_input:
-                    st.write(perform_pandas_task(task_input, pandas_agent))
-    
-                    st.divider()
-                    st.header("Data Science Problem")
-                    st.write("""Now that we have a solid grasp of the data at hand and a 
-                            clear understanding of the variable we intend to investigate, 
-                            it's important that we reframe our business 
-                            problem into a data science problem.""")
-                    
-                    # Get user input
-                    prompt = st.text_area('What is the business problem you would like to solve?')
-
-                    # Display results on button click
-                    if st.button("Get Suggestions"):
-                        if prompt:
-                            wiki_research = wiki(prompt)
-                            my_data_problem, my_model_selection = chains_output(prompt, wiki_research, llm)
-                            st.write("**Data Science Problem:**")
-                            st.write(my_data_problem)
-                            st.write("**Machine Learning Algorithm Suggestions:**")
-                            st.write(my_model_selection)
-                            # algorithm_list = list_to_selectbox(my_model_selection)
-                            # st.write(algorithm_list)
-                            # selected_algorithm = st.selectbox("Select Machine Learning Algorithm", algorithm_list)
+                # Display results on button click
+                if st.button("Get Suggestions"):
+                    if prompt:
+                        wiki_research = wiki(prompt)
+                        my_data_problem, my_model_selection = chains_output(prompt, wiki_research, llm)
+                        st.write("**Data Science Problem:**")
+                        st.write(my_data_problem)
+                        st.write("**Machine Learning Algorithm Suggestions:**")
+                        st.write(my_model_selection)
+                        # algorithm_list = list_to_selectbox(my_model_selection)
+                        # st.write(algorithm_list)
+                        # selected_algorithm = st.selectbox("Select Machine Learning Algorithm", algorithm_list)
+                        
+                        # if selected_algorithm != "Select Algorithm":
+                        #     st.subheader("Assumption")
+                        #     solution = python_solution(my_data_problem, selected_algorithm, user_csv, pandas_agent)
+                        #     st.write(solution)
                             
-                            # if selected_algorithm != "Select Algorithm":
-                            #     st.subheader("Assumption")
-                            #     solution = python_solution(my_data_problem, selected_algorithm, user_csv, pandas_agent)
-                            #     st.write(solution)
-                                
 
-            with st.sidebar:
-                with st.expander("What are the steps of EDA"):
-                    topic = 'What are the steps of Exploratory Data Analysis'
-                    resp = suggestion_model(GOOGLE_API_KEY, topic)
-                    st.write(resp)
+        with st.sidebar:
+            with st.expander("What are the steps of EDA"):
+                topic = 'What are the steps of Exploratory Data Analysis'
+                resp = suggestion_model(GOOGLE_API_KEY, topic)
+                st.write(resp)
 
-                with st.expander("Get Help"):
-                    llm_suggestion = st.text_area("Ask Me Data Science Problem:")
+            with st.expander("Get Help"):
+                llm_suggestion = st.text_area("Ask Me Data Science Problem:")
 
-                    if st.button("Tell me"):
-                        llm_result = suggestion_model(GOOGLE_API_KEY, llm_suggestion)
-                        st.write(llm_result)
+                if st.button("Tell me"):
+                    llm_result = suggestion_model(GOOGLE_API_KEY, llm_suggestion)
+                    st.write(llm_result)
