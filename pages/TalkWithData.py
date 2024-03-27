@@ -249,13 +249,13 @@ def perform_eda(input, _pandas_agent):
 
 # Function to display a brief information about a variable in a dataset. 
 @st.cache_data
-def variable_info(df, var):
+def variable_info(df, var, varX):
     # Summary Statistics
     st.write(f"Resumo Estatístico: '{var}':")
     st.write(df[var].describe())
     
     # line plot
-    st.line_chart(df, y=[var])
+    st.line_chart(df, x=[varX], y=[var])
 
     # Distribution Visualization
     st.write(f"Distribuição: '{var}':")
@@ -328,9 +328,9 @@ if st.session_state.clicked[1]:
         st.subheader("Variável de Estudo:")
             
         user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.select_dtypes(include='number').columns)
-        #user_question_variable = st.selectbox("Qual variável / feature é importante??", user_csv.columns)
+        user_question_variable_X = st.selectbox("Qual variável / feature é importante??", user_csv.columns)
         if user_question_variable:
-            variable_info(user_csv, user_question_variable)
+            variable_info(user_csv, user_question_variable, user_question_variable_X)
             st.subheader("Estudo Aprofundado:")
             task_input = st.text_input("O que mais vc gostaria de analisar?")
             if task_input:
