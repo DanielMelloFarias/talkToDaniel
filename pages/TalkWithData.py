@@ -255,7 +255,8 @@ def variable_info(df, var, varX):
     st.write(df[var].describe())
     
     # line plot
-    st.line_chart(df, x="Produto", y=[var])
+    #st.line_chart(df, x="Produto", y=[var])
+    st.line_chart(df, y=[var])
 
     # Distribution Visualization
     st.write(f"Distribuição: '{var}':")
