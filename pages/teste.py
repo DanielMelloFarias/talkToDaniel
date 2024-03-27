@@ -11,12 +11,10 @@ uploaded_file = st.file_uploader("Carregue seu arquivo CSV aqui", type=["csv"])
 if uploaded_file is not None:
         # Lendo o arquivo CSV
     try:
-        df = pd.read_csv(uploaded_file, encoding='utf-8')
-    except UnicodeDecodeError:
-        try:
-            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
-        except UnicodeDecodeError:
-            st.error("Não foi possível ler o arquivo com as codificações comuns. Por favor, verifique a codificação do arquivo e tente novamente.")
+        uploaded_file.seek(0)
+        df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
+    except Exception as e:
+        st.error(f"Erro ao ler o arquivo: {e}")
 
     # Exibindo o dataframe
     st.write("Visualizando os dados:")
