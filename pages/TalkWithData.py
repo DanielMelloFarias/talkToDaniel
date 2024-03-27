@@ -53,6 +53,9 @@ def clicked(button):
 # Function to handle user file upload
 def handle_file_upload():
     user_csv = st.file_uploader("Upload your file here", type="csv")
+    print (user_csv)
+    df = pd.read_csv(user_csv)
+    print (df)
     if user_csv is not None:
         user_csv.seek(0)
         df = pd.read_csv(user_csv)
