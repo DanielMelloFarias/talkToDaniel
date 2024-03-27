@@ -1,3 +1,5 @@
+#Fonte: https://github.com/saha-trideep/AI-Data-Assistant/tree/main
+
 import streamlit as st
 
 import re
@@ -6,7 +8,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-from dotenv import load_dotenv
 
 # from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain_experimental.agents.agent_toolkits.pandas.base import create_pandas_dataframe_agent
